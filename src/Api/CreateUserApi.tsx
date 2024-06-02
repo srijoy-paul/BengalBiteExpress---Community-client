@@ -32,6 +32,8 @@ export const useCreateUser = () => {
     }
     const compiledResponse = await response.json();
     console.log(compiledResponse);
+    toast.success("Successfully Logged In!");
+    return compiledResponse;
   };
   const {
     mutateAsync: createUser,

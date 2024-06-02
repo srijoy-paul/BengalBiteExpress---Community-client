@@ -1,11 +1,8 @@
-import Header from "./Navbar/Header";
+import RootLayout from "@/Layouts/RootLayout";
+import Header from "../Navbar/Header";
 
 function Home() {
-  return (
-    <div>
-      <Header />
-    </div>
-  );
+  return <RootLayout>maain</RootLayout>;
 }
 
 export default Home;

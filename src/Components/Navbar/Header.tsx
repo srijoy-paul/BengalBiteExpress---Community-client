@@ -14,14 +14,16 @@ function Header({ isAbsolute }: Props) {
 Green: #008000 */
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   return (
-    <div className={` py-6 w-full z-10 ${isAbsolute ? "absolute" : ""} `}>
+    <div
+      className={`md:hidden py-6 w-full z-10 ${isAbsolute ? "absolute" : ""}`}
+    >
       <div className="container mx-auto flex justify-between items-center">
         <Link
           to="/"
           className="text-2xl font-bold text-saffron flex items-center tracking-tighter"
         >
           <img
-            src="../../../public/assets/BengalBiteExpress - Community.jpeg"
+            src="../../../public/assets/BengalBiteExpress - Community.png"
             alt=""
             style={{ height: "60px", width: "60px" }}
           />
@@ -46,13 +48,13 @@ Green: #008000 */
           </div>
         )}
 
-        {isAuthenticated ? (
+        {/* {isAuthenticated ? (
           ""
         ) : (
           <div className="justify-center items-center align-middle md:hidden">
             <MobileHeader />
           </div>
-        )}
+        )} */}
 
         {/*
         <div className="hidden md:flex justify-center items-center align-middle">
