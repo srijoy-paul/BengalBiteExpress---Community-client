@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,14 +16,25 @@ import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 
 const formSchema = z.object({
-  caption: z.string().min(20, "You should provide a caption."),
-  location: z.string().min(1),
-  //   tags: z.array(),
+  caption: z.string().min(5).max(2200),
+  file: z.custom<File[]>(),
+  location: z.string().min(2).max(100),
+  tags: z.string(),
 });
 
-const CreatePostForm = () => {
+type PostFormProps = {
+  post?: any;
+};
+
+const CreatePostForm = ({ post }: PostFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      caption: post ? post?.caption : "",
+      file: [],
+      location: post ? post?.location : "",
+      tags: post ? post.tags.join(",") : "",
+    },
   });
 
   function onSubmit(formData: z.infer<typeof formSchema>) {
@@ -47,7 +59,22 @@ const CreatePostForm = () => {
             </FormItem>
           )}
         />
-        <FileUploader />
+
+        <FormField
+          control={form.control}
+          name="file"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add Photos</FormLabel>
+              <FormControl>
+                <FileUploader
+                  fieldChange={field.onChange}
+                  mediaUrl={post?.imageUrl}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
