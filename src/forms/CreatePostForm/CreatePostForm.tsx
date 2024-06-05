@@ -14,6 +14,8 @@ import { Textarea } from "@/Components/ui/textarea";
 import FileUploader from "./FileUploader";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
+import { useCreatePost } from "@/Api/CreatePostApi";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   caption: z.string().min(5).max(2200),
@@ -27,6 +29,7 @@ type PostFormProps = {
 };
 
 const CreatePostForm = ({ post }: PostFormProps) => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,8 +40,28 @@ const CreatePostForm = ({ post }: PostFormProps) => {
     },
   });
 
-  function onSubmit(formData: z.infer<typeof formSchema>) {
-    console.log(formData);
+  const { createPost, isLoading: isCreateUserLoading } = useCreatePost();
+
+  async function onSubmit(formDataJson: z.infer<typeof formSchema>) {
+    console.log(formDataJson);
+    const formData = new FormData();
+
+    formData.append("caption", formDataJson.caption);
+    formData.append("location", formDataJson.location);
+    formData.append("tags", formDataJson.tags);
+
+    if (
+      Array.isArray(formDataJson.file) &&
+      formDataJson.file.every((item) => item instanceof File)
+    ) {
+      formDataJson.file.forEach((file, index) => {
+        formData.append(`file`, file);
+      });
+    } else {
+      console.error("file is not a valid array of File instances");
+    }
+    createPost(formData);
+    if (!isCreateUserLoading) navigate("/");
   }
   return (
     <Form {...form}>
